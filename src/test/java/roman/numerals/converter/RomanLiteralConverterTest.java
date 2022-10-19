@@ -1,13 +1,18 @@
 package roman.numerals.converter;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import roman.numerals.converter.exception.IllegalLiteralException;
 import roman.numerals.converter.exception.UnknownLiteralException;
 import roman.numerals.converter.parser.RomanLiteralsParser;
 import roman.numerals.converter.parser.RomanParser;
 import roman.numerals.converter.validator.RomanLiteralValidator;
 import roman.numerals.converter.validator.RomanValidator;
+
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -26,51 +31,28 @@ class RomanLiteralConverterTest {
         romanLiteralConverter = new RomanLiteralConverter(romanLiteralValidator, romanParser);
     }
 
-    @Test
-    void should_throw_illegal_literal_exception_when_literals_are_empty() {
-        // When - Then
-        assertThrows(IllegalLiteralException.class, () -> romanLiteralConverter.convert(""));
+    @ParameterizedTest
+    @MethodSource("exceptionCases")
+    void should_throw_exception_when_roman_literals_are_not_valid(String input, Class<Exception> expectedExceptionClass) {
+        assertThrows(expectedExceptionClass, () -> romanLiteralConverter.convert(input));
     }
 
-    @Test
-    void should_throw_illegal_literal_exception_when_literals_are_null() {
-        // When - Then
-        assertThrows(IllegalLiteralException.class, () -> romanLiteralConverter.convert(null));
+    @ParameterizedTest
+    @CsvSource({
+            "I,         1",
+            "X,        10",
+            "C, 100",
+            "XXXIV,    34"
+    })
+    void should_convert_romain_literal_to_arabic_numbers(String romanLiteral, int conversion) {
+        assertThat(romanLiteralConverter.convert(romanLiteral)).isEqualTo(conversion);
     }
 
-    @Test
-    void should_throw_unknown_literal_exception_when_invalid_literals_are_detected() {
-        // When - Then
-        assertThrows(UnknownLiteralException.class, () -> romanLiteralConverter.convert("IZOLC"));
-    }
-
-    @Test
-    void should_throw_illegal_literal_exception_when_literal_C_is_repeated_more_than_thrice_successively() {
-        // When - Then
-        assertThrows(IllegalLiteralException.class, () -> romanLiteralConverter.convert("IIIXXXCCCC"));
-    }
-
-    @Test
-    void should_return_1_when_parsing_I() {
-        // When - Then
-        assertThat(romanLiteralConverter.convert("I")).isEqualTo(1);
-    }
-
-    @Test
-    void should_return_10_when_parsing_X() {
-        // When - Then
-        assertThat(romanLiteralConverter.convert("X")).isEqualTo(10);
-    }
-
-    @Test
-    void should_return_100_when_parsing_C() {
-        // When - Then
-        assertThat(romanLiteralConverter.convert("C")).isEqualTo(100);
-    }
-
-    @Test
-    void should_return_34_when_parsing_XXXIV() {
-        // When - Then
-        assertThat(romanLiteralConverter.convert("XXXIV")).isEqualTo(34);
+    private static Stream<Arguments> exceptionCases() {
+        return Stream.of(
+                Arguments.of("", IllegalLiteralException.class),
+                Arguments.of(null, IllegalLiteralException.class),
+                Arguments.of("IZOLC", UnknownLiteralException.class),
+                Arguments.of("IIIXXXCCCC", IllegalLiteralException.class));
     }
 }
