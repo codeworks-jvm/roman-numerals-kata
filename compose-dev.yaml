@@ -3,7 +3,7 @@ services:
     entrypoint:
     - sleep
     - infinity
-    image: adoptopenjdk/maven-openjdk13
+    image: inopsdockers/openjdk14-mvn-gcloud-kubctl
     init: true
     volumes:
     - type: bind
