@@ -3,7 +3,7 @@ services:
     entrypoint:
     - sleep
     - infinity
-    image: adoptopenjdk/maven-openjdk8
+    image: adoptopenjdk/maven-openjdk13
     init: true
     volumes:
     - type: bind
