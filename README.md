@@ -61,4 +61,4 @@ This project has been compiled with Java 14.
 
 ### Test Coverage
 
-![Tests Coverage](src/main/resources/tests_coverage.png)
+![Tests Coverage](src/main/resources/test_coverage.png)

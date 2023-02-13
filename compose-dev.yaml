@@ -3,7 +3,7 @@ services:
     entrypoint:
     - sleep
     - infinity
-    image: inopsdockers/openjdk14-mvn-gcloud-kubctl
+    image: jelastic/maven:3.9.0-openjdk-20.ea-b34
     init: true
     volumes:
     - type: bind

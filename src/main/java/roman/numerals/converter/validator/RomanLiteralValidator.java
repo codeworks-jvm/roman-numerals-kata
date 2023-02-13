@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class RomanLiteralValidator implements RomanValidator {
 
@@ -82,6 +81,6 @@ public class RomanLiteralValidator implements RomanValidator {
     private static List<Character> romanLiteralsAsList(String romanLiterals) {
         return romanLiterals.chars()
                 .mapToObj(character -> (char) character)
-                .collect(Collectors.toList());
+                .toList();
     }
 }
